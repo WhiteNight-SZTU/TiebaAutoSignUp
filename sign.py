@@ -3,6 +3,7 @@ import json
 import requests
 import time
 from login import get_cookies
+import random
 
 # 签到接口
 sign_url = "https://tieba.baidu.com/sign/add"
@@ -30,6 +31,7 @@ def tieba_sign_up(tieba_name, tieba_url):
         return True
     else:
         logger.error("签到失败：" + tieba_name + "吧")
+        logger.debug(str(resp.json()))
         logger.error("失败原因：" + resp.json()["error"])
     return False
 
@@ -41,7 +43,7 @@ def sign_up():
     sign_sum = 0
     faliure_sum = 0
     for tieba_name, tieba_url in tieba_dict.items():
-        time.sleep(1)
+        time.sleep(random.randint(5, 10))
         if tieba_sign_up(tieba_name, tieba_url) == False:
             faliure_sum += 1
         sign_sum += 1
@@ -51,7 +53,7 @@ def sign_up():
 
 
 if __name__ == "__main__":
-    tieba_name = "net"
-    tieba_url = "https://tieba.baidu.com/f?kw=net"
+    tieba_name = "余额宝"
+    tieba_url = "https://tieba.baidu.com/f?kw=%D3%E0%B6%EE%B1%A6"
     logger.set_logger("debug")
     tieba_sign_up(tieba_name, tieba_url)
