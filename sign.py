@@ -32,7 +32,6 @@ def tieba_sign_up(tieba_name, tieba_url):
     elif resp.json()["no"] == 2150040:
         logger.error("签到失败：" + tieba_name + "吧")
         logger.error("失败原因：" + resp.json()["error"])
-        raise Exception("需要captcha验证码，中断签到")
     else:
         logger.error("签到失败：" + tieba_name + "吧")
         logger.debug(str(resp.json()))
@@ -48,7 +47,7 @@ def sign_up():
     sign_sum = 0
     faliure_sum = 0
     for tieba_name, tieba_url in tieba_dict.items():
-        time.sleep(random.randint(10, 15))
+        time.sleep(random.randint(20, 30))
         if tieba_sign_up(tieba_name, tieba_url) == False:
             faliure_sum += 1
         sign_sum += 1
