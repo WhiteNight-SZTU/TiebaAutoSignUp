@@ -47,11 +47,13 @@ def sign_up():
     sign_sum = 0
     faliure_sum = 0
     for tieba_name, tieba_url in tieba_dict.items():
-        time.sleep(random.randint(10, 20))
+        time.sleep(random.randint(25, 30))
         if sign_sum == 99:
             logger.debug("已签到" + str(sign_sum) + "签到暂停3分钟")
             time.sleep(180)
-            sign_sum = 0
+        elif sign_sum == 199:
+            logger.debug("已签到" + str(sign_sum) + "签到暂停3分钟")
+            time.sleep(150)
         if tieba_sign_up(tieba_name, tieba_url) == False:
             faliure_sum += 1
         sign_sum += 1
