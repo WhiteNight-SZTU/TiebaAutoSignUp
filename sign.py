@@ -47,15 +47,16 @@ def sign_up():
     sign_sum = 0
     faliure_sum = 0
     for tieba_name, tieba_url in tieba_dict.items():
-        if sign_sum == 98:
+        # 单次连续签到上限为98
+        if sign_sum == 97:
             logger.debug("已签到" + str(sign_sum) + "签到暂停5分钟")
             time.sleep(300)
-        elif sign_sum == 198:
+        elif sign_sum == 197:
             logger.debug("已签到" + str(sign_sum) + "签到暂停5分钟")
             time.sleep(300)
         if tieba_sign_up(tieba_name, tieba_url) == False:
             faliure_sum += 1
-            logger.debug("当前已签到成功" + str(sign_sum - faliure_sum) + "个吧")
+            logger.debug("\n当前已签到成功" + str(sign_sum - faliure_sum) + "个吧")
         sign_sum += 1
         time.sleep(random.randint(20, 25))
 
