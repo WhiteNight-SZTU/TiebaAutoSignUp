@@ -4,59 +4,62 @@ import requests
 import time
 from login import get_cookies
 import random
+import hashlib
 
-# 签到接口
-sign_url = "https://tieba.baidu.com/sign/add"
+# PC端签到接口
+# sign_url = "https://tieba.baidu.com/sign/add"
+
+# 移动端签到接口
+sign_url = "https://c.tieba.baidu.com/c/c/forum/sign"
 
 
 # 单个贴吧签到
 # tieba_name:贴吧名 tieba_url:贴吧链接
-def tieba_sign_up(tieba_name, tieba_url):
+def tieba_sign_in(tieba_name, tieba_url, tbs, BDUSS):
     referer = tieba_url
-    BDUSS, STOKEN = get_cookies()
+    sign_str = f"kw={tieba_name}tbs={tbs}tiebaclient!!!"
+    sign = hashlib.md5(sign_str.encode("utf-8")).hexdigest()
     payload = {
-        "ie": "utf-8",
         "kw": tieba_name,
+        "tbs": tbs,
+        "sign": sign,
     }
     Cookies = {
         "BDUSS": BDUSS,
-        "STOKEN": STOKEN,
     }
     resp = requests.post(
-        sign_url, cookies=Cookies, headers={"Referer": referer}, data=payload
+        sign_url,
+        cookies=Cookies,
+        data=payload,
     )
-    # 1101表示重复签到
-    if resp.json()["no"] == 0 or resp.json()["no"] == 1101:
+
+    if "user_info" in resp.json():
         logger.debug("签到成功：" + tieba_name + "吧")
         return True
-    elif resp.json()["no"] == 2150040:
+    elif resp.json()["error_code"] == "160002":
         logger.error("签到失败：" + tieba_name + "吧")
-        logger.error("失败原因：" + resp.json()["error"])
+        logger.error("失败原因：" + resp.json()["error_msg"])
     else:
         logger.error("签到失败：" + tieba_name + "吧")
         logger.debug(str(resp.json()))
-        logger.error("失败原因：" + resp.json()["error"])
-        # need vcode 需要captcha验证码
+        logger.error("失败原因：" + resp.json()["error_msg"])
     return False
 
 
-def sign_up():
+def sign_in():
     logger.info("开始签到")
     with open("tieba_dict.json", "r", encoding="utf-8") as f:
         tieba_dict = json.load(f)
     sign_sum = 0
     faliure_sum = 0
+    tbs, BDUSS, _ = get_cookies()
     for tieba_name, tieba_url in tieba_dict.items():
-        # 单次连续签到上限为98
-        if sign_sum == 97:
-            logger.info("已签到" + str(sign_sum) + "签到暂停10分钟")
-            time.sleep(1200)
-        elif sign_sum == 197:
-            logger.info("已签到" + str(sign_sum) + "签到暂停10分钟")
-            time.sleep(1200)
-        if tieba_sign_up(tieba_name, tieba_url) == False:
+        if tieba_sign_in(tieba_name, tieba_url, tbs, BDUSS) == False:
+            sign_sum += 1
             faliure_sum += 1
             logger.info("\n当前已签到成功" + str(sign_sum - faliure_sum) + "个吧")
+            time.sleep(random.randint(1, 5))
+            continue
         sign_sum += 1
         time.sleep(random.randint(1, 5))
 
@@ -69,4 +72,4 @@ if __name__ == "__main__":
     tieba_name = "余额宝"
     tieba_url = "https://tieba.baidu.com/f?kw=%D3%E0%B6%EE%B1%A6"
     logger.set_logger("debug")
-    tieba_sign_up(tieba_name, tieba_url)
+    tieba_sign_in(tieba_name, tieba_url)

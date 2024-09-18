@@ -6,6 +6,7 @@ import logger
 
 prefix = "https://tieba.baidu.com"
 url = "https://tieba.baidu.com/f/like/mylike"
+tbs_url = "https://tieba.baidu.com/dc/common/tbs"
 
 
 def get_cookies():
@@ -23,14 +24,20 @@ def get_cookies():
     else:
         raise Exception("未找到BDUSS或STOKEN")
     logger.debug("获取BDUSS和STOKEN成功")
-    return BDUSS, STOKEN
+    response = json.loads(
+        requests.get(tbs_url, cookies={"BDUSS": BDUSS, "STOKEN": STOKEN}).text
+    )
+    login_state = response["is_login"]
+    if login_state == 1:
+        logger.debug("登录成功")
+    return response["tbs"], BDUSS, STOKEN
 
 
 # 从百度贴吧获取关注的贴吧列表
 # 结果保存到tieba_dict.json文件中
 def get_tieba_dict():
     tieba_dict = {}
-    BDUSS, STOKEN = get_cookies()
+    _, BDUSS, STOKEN = get_cookies()
     Cookies = {
         "BDUSS": BDUSS,
         "STOKEN": STOKEN,
@@ -60,6 +67,7 @@ def get_tieba_dict():
 
 
 def extract_data(html_content: str):
+    print(html_content)
     rows = re.findall(r"<tr>(.*?)</tr>", html_content, re.DOTALL)
     data = []
     for row in rows:

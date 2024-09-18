@@ -2,7 +2,7 @@ import argparse
 import logger
 import os
 from login import get_tieba_dict
-from sign import sign_up
+from sign import sign_in
 
 
 def parser():
@@ -24,12 +24,14 @@ def main():
     args = parser()
     logger.set_logger(args.log)
     if args.refresh == True:
+        logger.info("重新获取贴吧列表")
         get_tieba_dict()
-    if os.path.exists("tieba_dict.json"):
-        sign_up()
     else:
-        get_tieba_dict()
-        sign_up()
+        if os.path.exists("tieba_dict.json"):
+            sign_in()
+        else:
+            get_tieba_dict()
+            sign_in()
 
 
 if __name__ == "__main__":
