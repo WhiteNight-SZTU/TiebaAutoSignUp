@@ -37,8 +37,10 @@ def tieba_sign_in(tieba_name, tieba_url, tbs, BDUSS):
         logger.debug("签到成功：" + tieba_name + "吧")
         return True
     elif resp.json()["error_code"] == "160002":
-        logger.error("签到失败：" + tieba_name + "吧")
-        logger.error("失败原因：" + resp.json()["error_msg"])
+        # 已签到
+        logger.error(
+            "签到失败：" + tieba_name + "吧" + " 失败原因：" + resp.json()["error_msg"]
+        )
     else:
         logger.error("签到失败：" + tieba_name + "吧")
         logger.debug(str(resp.json()))
@@ -47,7 +49,7 @@ def tieba_sign_in(tieba_name, tieba_url, tbs, BDUSS):
 
 
 def sign_in():
-    logger.info("开始签到")
+    logger.info("开始签到\n")
     with open("tieba_dict.json", "r", encoding="utf-8") as f:
         tieba_dict = json.load(f)
     sign_sum, faliure_sum = 0, 0
@@ -57,7 +59,7 @@ def sign_in():
             faliure_sum += 1
         sign_sum += 1
         logger.info("共计" + str(sign_sum) + "个吧")
-        logger.info("当前已签到成功" + str(sign_sum - faliure_sum) + "个吧")
+        logger.info("已签到成功" + str(sign_sum - faliure_sum) + "个吧\n")
         time.sleep(random.randint(1, 5))
 
     logger.info("共计" + str(sign_sum) + "个贴吧")
