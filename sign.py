@@ -50,17 +50,14 @@ def sign_in():
     logger.info("开始签到")
     with open("tieba_dict.json", "r", encoding="utf-8") as f:
         tieba_dict = json.load(f)
-    sign_sum = 0
-    faliure_sum = 0
+    sign_sum, faliure_sum = 0, 0
     tbs, BDUSS, _ = get_cookies()
     for tieba_name, tieba_url in tieba_dict.items():
         if tieba_sign_in(tieba_name, tieba_url, tbs, BDUSS) == False:
-            sign_sum += 1
             faliure_sum += 1
-            logger.info("\n当前已签到成功" + str(sign_sum - faliure_sum) + "个吧")
-            time.sleep(random.randint(1, 5))
-            continue
         sign_sum += 1
+        logger.info("共计" + str(sign_sum) + "个吧")
+        logger.info("当前已签到成功" + str(sign_sum - faliure_sum) + "个吧")
         time.sleep(random.randint(1, 5))
 
     logger.info("共计" + str(sign_sum) + "个贴吧")
