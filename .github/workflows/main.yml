@@ -27,7 +27,7 @@ jobs:
 
     - name: Run script
       run: |
-        python main.py
+        python main.py --log debug
       env:
         BDUSS: ${{ secrets.BDUSS }}
         STOKEN: ${{ secrets.STOKEN }}
