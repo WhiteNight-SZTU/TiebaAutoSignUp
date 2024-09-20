@@ -75,7 +75,6 @@ def get_tieba_dict():
 
 
 def extract_data(html_content: str):
-    print(html_content)
     rows = re.findall(r"<tr>(.*?)</tr>", html_content, re.DOTALL)
     data = []
     for row in rows:
