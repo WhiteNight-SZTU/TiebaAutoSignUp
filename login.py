@@ -11,18 +11,22 @@ tbs_url = "https://tieba.baidu.com/dc/common/tbs"
 
 def get_cookies():
     BDUSS, STOKEN = "", ""
-    if os.path.exists("test_account.json"):
-        with open("test_account.json", "r", encoding="utf-8") as f:
-            account = json.load(f)
-            BDUSS = account["BDUSS"]
-            STOKEN = account["STOKEN"]
-    elif os.path.exists("account.json"):
-        with open("account.json", "r", encoding="utf-8") as f:
-            account = json.load(f)
-            BDUSS = account["BDUSS"]
-            STOKEN = account["STOKEN"]
+    if os.getenv("BDUSS") and os.getenv("STOKEN"):
+        BDUSS = os.getenv("BDUSS")
+        STOKEN = os.getenv("STOKEN")
     else:
-        raise Exception("未找到BDUSS或STOKEN")
+        if os.path.exists("test_account.json"):
+            with open("test_account.json", "r", encoding="utf-8") as f:
+                account = json.load(f)
+                BDUSS = account["BDUSS"]
+                STOKEN = account["STOKEN"]
+        elif os.path.exists("account.json"):
+            with open("account.json", "r", encoding="utf-8") as f:
+                account = json.load(f)
+                BDUSS = account["BDUSS"]
+                STOKEN = account["STOKEN"]
+        else:
+            raise Exception("未找到BDUSS或STOKEN")
     logger.debug("获取BDUSS和STOKEN成功")
     response = json.loads(
         requests.get(tbs_url, cookies={"BDUSS": BDUSS, "STOKEN": STOKEN}).text
