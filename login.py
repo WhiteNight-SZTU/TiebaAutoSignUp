@@ -10,7 +10,8 @@ tbs_url = "https://tieba.baidu.com/dc/common/tbs"
 
 def get_cookies():
     BDUSS, STOKEN = "", ""
-
+    ENV=os.environ
+    print(ENV)
     if BDUSS in os.environ and STOKEN in os.environ:
         logger.debug("从Github Action中获取BDUSS和STOKEN")
         BDUSS = os.environ.get("BDUSS")
@@ -88,4 +89,5 @@ def extract_data(html_content: str):
 
 if __name__ == "__main__":
     logger.set_logger("debug")
-    get_tieba_dict()
+    #get_tieba_dict()
+    get_cookies()
