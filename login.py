@@ -12,9 +12,11 @@ tbs_url = "https://tieba.baidu.com/dc/common/tbs"
 def get_cookies():
     BDUSS, STOKEN = "", ""
     if os.getenv("BDUSS") and os.getenv("STOKEN"):
+        logger.debug("从Github Action中获取BDUSS和STOKEN")
         BDUSS = os.getenv("BDUSS")
         STOKEN = os.getenv("STOKEN")
     else:
+        logger.debug("从本地文件中获取BDUSS和STOKEN")
         if os.path.exists("test_account.json"):
             with open("test_account.json", "r", encoding="utf-8") as f:
                 account = json.load(f)
@@ -34,6 +36,8 @@ def get_cookies():
     login_state = response["is_login"]
     if login_state == 1:
         logger.debug("登录成功")
+    else:
+        raise Exception("登录失败")
     return response["tbs"], BDUSS, STOKEN
 
 
