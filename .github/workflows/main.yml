@@ -24,10 +24,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install requests
+        pip install hashlib
 
     - name: Run script
-      run: |
-        python main.py --log debug
       env:
         BDUSS: ${{ secrets.BDUSS }}
         STOKEN: ${{ secrets.STOKEN }}
+      run: |
+        python main.py --log debug

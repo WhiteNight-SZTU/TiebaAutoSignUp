@@ -11,7 +11,8 @@ tbs_url = "https://tieba.baidu.com/dc/common/tbs"
 
 def get_cookies():
     BDUSS, STOKEN = "", ""
-    if os.getenv("BDUSS") and os.getenv("STOKEN"):
+
+    if BDUSS in os.environ and STOKEN in os.environ:
         logger.debug("从Github Action中获取BDUSS和STOKEN")
         BDUSS = os.getenv("BDUSS")
         STOKEN = os.getenv("STOKEN")
@@ -37,6 +38,7 @@ def get_cookies():
     if login_state == 1:
         logger.debug("登录成功")
     else:
+        logger.debug(login_state)
         raise Exception("登录失败")
     return response["tbs"], BDUSS, STOKEN
 
