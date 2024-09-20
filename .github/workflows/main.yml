@@ -3,9 +3,9 @@ name: Tieba Auto Sign Up
 on:
   schedule:
     - cron: '0 8 * * *'
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   run-script:
