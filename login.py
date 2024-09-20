@@ -28,7 +28,7 @@ def get_cookies():
                 account = json.load(f)
                 BDUSS = account["BDUSS"]
                 STOKEN = account["STOKEN"]
-        else:
+        if BDUSS == "" or STOKEN == "":
             raise Exception("未找到BDUSS或STOKEN")
     logger.debug("获取BDUSS和STOKEN成功")
     response = json.loads(
