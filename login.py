@@ -8,14 +8,13 @@ prefix = "https://tieba.baidu.com"
 url = "https://tieba.baidu.com/f/like/mylike"
 tbs_url = "https://tieba.baidu.com/dc/common/tbs"
 
-
 def get_cookies():
     BDUSS, STOKEN = "", ""
 
     if BDUSS in os.environ and STOKEN in os.environ:
         logger.debug("从Github Action中获取BDUSS和STOKEN")
-        BDUSS = os.getenv("BDUSS")
-        STOKEN = os.getenv("STOKEN")
+        BDUSS = os.environ.get("BDUSS")
+        STOKEN = os.environ.get("STOKEN")
     else:
         logger.debug("从本地文件中获取BDUSS和STOKEN")
         if os.path.exists("test_account.json"):
