@@ -14,9 +14,8 @@ sign_url = "https://c.tieba.baidu.com/c/c/forum/sign"
 
 
 # 单个贴吧签到
-# tieba_name:贴吧名 tieba_url:贴吧链接
-def tieba_sign_in(tieba_name, tieba_url, tbs, BDUSS):
-    referer = tieba_url
+# tieba_name:贴吧名
+def tieba_sign_in(tieba_name, tbs, BDUSS):
     sign_str = f"kw={tieba_name}tbs={tbs}tiebaclient!!!"
     sign = hashlib.md5(sign_str.encode("utf-8")).hexdigest()
     payload = {
@@ -55,7 +54,7 @@ def sign_in():
     sign_sum, faliure_sum = 0, 0
     tbs, BDUSS, _ = get_cookies()
     for tieba_name, tieba_url in tieba_dict.items():
-        if tieba_sign_in(tieba_name, tieba_url, tbs, BDUSS) == False:
+        if tieba_sign_in(tieba_name, tbs, BDUSS) == False:
             faliure_sum += 1
         sign_sum += 1
         logger.info("共计" + str(sign_sum) + "个吧")
